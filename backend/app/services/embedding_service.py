@@ -19,11 +19,14 @@ class EmbeddingService:
         return response.embeddings[0].values
 
     def generate_embeddings(self, chunks: list) -> list:
+        import time
         embeddings = []
-        for chunk in chunks:
+        for i, chunk in enumerate(chunks):
             response = self.client.models.embed_content(
                 model="gemini-embedding-001",
                 contents=chunk,
             )
             embeddings.append(response.embeddings[0].values)
+            if (i + 1) % 10 == 0:
+                time.sleep(1)
         return embeddings

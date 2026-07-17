@@ -5,8 +5,8 @@ class ChunkService:
 
     def __init__(self):
         self.text_splitter = RecursiveCharacterTextSplitter(
-            chunk_size=500,
-            chunk_overlap=100,
+            chunk_size=1500,
+            chunk_overlap=150,
             separators=["\n\n", "\n", ".", " ", ""]
         )
 
