@@ -13,7 +13,7 @@ class EmbeddingService:
 
     def generate_embedding(self, text: str) -> list:
         response = self.client.models.embed_content(
-            model="text-embedding-004",
+            model="gemini-embedding-001",
             contents=text,
         )
         return response.embeddings[0].values
@@ -22,7 +22,7 @@ class EmbeddingService:
         embeddings = []
         for chunk in chunks:
             response = self.client.models.embed_content(
-                model="text-embedding-004",
+                model="gemini-embedding-001",
                 contents=chunk,
             )
             embeddings.append(response.embeddings[0].values)
