@@ -1,4 +1,5 @@
 import chromadb
+from chromadb.config import Settings
 
 from app.config import settings
 from app.services.embedding_service import EmbeddingService
@@ -12,7 +13,11 @@ class VectorService:
         if cls._instance is None:
             cls._instance = super().__new__(cls)
             cls._instance.embedding_service = EmbeddingService()
-            cls._instance.client = chromadb.PersistentClient(path=settings.VECTOR_DB_PATH)
+            cls._instance.client = chromadb.Client(Settings(
+                chroma_db_impl="duckdb+parquet",
+                persist_directory=settings.VECTOR_DB_PATH,
+                anonymized_telemetry=False
+            ))
             cls._instance.collection = cls._instance.client.get_or_create_collection(
                 name="opspilot"
             )
@@ -62,7 +67,7 @@ class VectorService:
             self.collection.delete(ids=results["ids"])
 
     def reset_collection(self):
-        self.client.delete_collection("opspilot")
+        self.client.reset()
         self.collection = self.client.get_or_create_collection(name="opspilot")
 
     def keyword_search(self, keyword: str) -> dict:

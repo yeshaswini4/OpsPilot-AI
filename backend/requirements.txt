@@ -7,7 +7,6 @@ pydantic-settings==2.6.1
 
 google-genai==1.7.0
 
-chromadb==0.5.23
-sentence-transformers==3.3.1
+chromadb==0.4.24
 pypdf==5.1.0
 langchain-text-splitters==0.3.3
