@@ -1,9 +1,5 @@
 import os
-os.environ["TRANSFORMERS_OFFLINE"] = "1"
-os.environ["HF_DATASETS_OFFLINE"] = "1"
-os.environ["HF_HUB_OFFLINE"] = "1"
 
-# Prevent PyTorch/OpenMP multithreading deadlocks/crashes in uvicorn threadpools
 os.environ["OMP_NUM_THREADS"] = "1"
 os.environ["MKL_NUM_THREADS"] = "1"
 os.environ["OPENBLAS_NUM_THREADS"] = "1"
@@ -14,7 +10,6 @@ from sentence_transformers import SentenceTransformer
 
 
 class EmbeddingService:
-
     _instance = None
 
     def __new__(cls):
