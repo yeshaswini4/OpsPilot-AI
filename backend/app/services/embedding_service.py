@@ -1,12 +1,5 @@
-import os
-
-os.environ["OMP_NUM_THREADS"] = "1"
-os.environ["MKL_NUM_THREADS"] = "1"
-os.environ["OPENBLAS_NUM_THREADS"] = "1"
-os.environ["VECLIB_MAXIMUM_THREADS"] = "1"
-os.environ["NUMEXPR_NUM_THREADS"] = "1"
-
-from sentence_transformers import SentenceTransformer
+from google import genai
+from app.config import settings
 
 
 class EmbeddingService:
@@ -15,13 +8,22 @@ class EmbeddingService:
     def __new__(cls):
         if cls._instance is None:
             cls._instance = super().__new__(cls)
-            cls._instance.model = SentenceTransformer(
-                "sentence-transformers/all-MiniLM-L6-v2"
-            )
+            cls._instance.client = genai.Client(api_key=settings.GEMINI_API_KEY)
         return cls._instance
 
     def generate_embedding(self, text: str) -> list:
-        return self.model.encode(text).tolist()
+        response = self.client.models.embed_content(
+            model="text-embedding-004",
+            contents=text,
+        )
+        return response.embeddings[0].values
 
     def generate_embeddings(self, chunks: list) -> list:
-        return self.model.encode(chunks).tolist()
+        embeddings = []
+        for chunk in chunks:
+            response = self.client.models.embed_content(
+                model="text-embedding-004",
+                contents=chunk,
+            )
+            embeddings.append(response.embeddings[0].values)
+        return embeddings
